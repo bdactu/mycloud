@@ -1,113 +1,1045 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyCloud</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --blue: #4285f4;
+    --blue-dark: #3367d6;
+    --bg: #f7f9fc;
+    --white: #ffffff;
+    --border: #e2e6ec;
+    --text: #202124;
+    --muted: #6b7280;
+    --hover: #f1f5fb;
+    --danger: #d93025;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
 /* =========================
-   MYCLOUD - JAVASCRIPT
+   AUTH
 ========================= */
+
+#auth {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #edf4ff, #ffffff);
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 430px;
+    background: white;
+    border-radius: 22px;
+    padding: 35px;
+    box-shadow: 0 12px 45px rgba(0,0,0,.10);
+}
+
+.logo {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.logo span,
+.header-logo span {
+    color: var(--blue);
+}
+
+.subtitle {
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: 30px;
+}
+
+.auth-box input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 13px;
+    border: 1px solid var(--border);
+    border-radius: 11px;
+    outline: none;
+    font-size: 15px;
+}
+
+.auth-box input:focus {
+    border-color: var(--blue);
+}
+
+.primary {
+    background: var(--blue);
+    color: white;
+    font-weight: 700;
+}
+
+.primary:hover {
+    background: var(--blue-dark);
+}
+
+.auth-button {
+    width: 100%;
+    padding: 14px;
+}
+
+.switch {
+    text-align: center;
+    color: var(--muted);
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.switch a {
+    color: var(--blue);
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.error {
+    color: var(--danger);
+    font-size: 13px;
+    margin-bottom: 12px;
+    min-height: 16px;
+}
+
+/* =========================
+   APP
+========================= */
+
+#app {
+    display: none;
+    min-height: 100vh;
+}
+
+header {
+    height: 70px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 0 24px;
+}
+
+.header-logo {
+    font-size: 23px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.search {
+    flex: 1;
+    max-width: 650px;
+}
+
+.search input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: #f1f3f4;
+    padding: 13px 18px;
+    border-radius: 30px;
+    font-size: 14px;
+}
+
+.user {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 700;
+}
+
+.user-name {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.logout {
+    background: #f1f3f4;
+    padding: 9px 13px;
+}
+
+.logout:hover {
+    background: #e8eaed;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.layout {
+    min-height: calc(100vh - 70px);
+    display: flex;
+}
+
+.sidebar {
+    width: 235px;
+    background: white;
+    border-right: 1px solid var(--border);
+    padding: 22px 14px;
+}
+
+.new-button {
+    width: 100%;
+    padding: 13px;
+    margin-bottom: 22px;
+    border-radius: 12px;
+    background: var(--blue);
+    color: white;
+    font-weight: 700;
+}
+
+.side-button {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    border-radius: 9px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.side-button:hover,
+.side-button.active {
+    background: var(--hover);
+}
+
+.content {
+    flex: 1;
+    padding: 30px;
+    min-width: 0;
+}
+
+.welcome {
+    margin-bottom: 25px;
+}
+
+.welcome h1 {
+    margin-bottom: 7px;
+}
+
+.welcome p {
+    color: var(--muted);
+}
+
+/* =========================
+   TOOLBAR
+========================= */
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}
+
+.toolbar button {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 10px 15px;
+}
+
+.toolbar button:hover {
+    background: var(--hover);
+}
+
+/* =========================
+   STORAGE INFO
+========================= */
+
+.storage-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 17px;
+    margin-bottom: 25px;
+}
+
+.storage-title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.storage-bar {
+    height: 8px;
+    border-radius: 20px;
+    background: #e9edf3;
+    overflow: hidden;
+}
+
+.storage-progress {
+    height: 100%;
+    width: 0%;
+    background: var(--blue);
+}
+
+/* =========================
+   FILES
+========================= */
+
+.files {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 17px;
+}
+
+.file {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    padding: 18px;
+    min-height: 160px;
+    transition: .15s;
+}
+
+.file:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 25px rgba(0,0,0,.07);
+}
+
+.file-icon {
+    font-size: 40px;
+    margin-bottom: 13px;
+}
+
+.file-name {
+    font-weight: 700;
+    word-break: break-word;
+}
+
+.file-info {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 7px;
+}
+
+.file-actions {
+    display: flex;
+    gap: 7px;
+    margin-top: 14px;
+}
+
+.file-actions button {
+    border: none;
+    background: #f1f3f4;
+    padding: 7px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.file-actions button:hover {
+    background: #e5e7eb;
+}
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 70px 20px;
+    color: var(--muted);
+}
+
+.empty-icon {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: white;
+    width: 100%;
+    max-width: 410px;
+    border-radius: 18px;
+    padding: 28px;
+}
+
+.modal-box h2 {
+    margin-bottom: 20px;
+}
+
+.modal-box input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 15px;
+    outline: none;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-actions button {
+    flex: 1;
+}
+
+.cancel {
+    background: #eee;
+}
+
+/* =========================
+   TOAST
+========================= */
+
+.toast {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: #202124;
+    color: white;
+    padding: 13px 17px;
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(15px);
+    pointer-events: none;
+    transition: .25s;
+    z-index: 2000;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width: 750px) {
+
+    header {
+        padding: 0 13px;
+        gap: 10px;
+    }
+
+    .header-logo {
+        display: none;
+    }
+
+    .user-name {
+        display: none;
+    }
+
+    .sidebar {
+        width: 65px;
+        padding: 14px 7px;
+    }
+
+    .new-button {
+        font-size: 0;
+    }
+
+    .new-button::before {
+        content: "＋";
+        font-size: 22px;
+    }
+
+    .side-button {
+        font-size: 0;
+        text-align: center;
+        padding: 13px 5px;
+    }
+
+    .content {
+        padding: 20px 15px;
+    }
+
+    .files {
+        grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ==================================================
+     AUTHENTIFICATION
+================================================== -->
+
+<section id="auth">
+
+    <div class="auth-box">
+
+        <div class="logo">
+            ☁️ <span>MyCloud</span>
+        </div>
+
+        <div class="subtitle">
+            Votre espace de stockage personnel
+        </div>
+
+        <!-- CONNEXION -->
+
+        <div id="loginForm">
+
+            <div id="loginError" class="error"></div>
+
+            <input
+                id="loginEmail"
+                type="email"
+                autocomplete="username"
+                placeholder="Adresse e-mail"
+            >
+
+            <input
+                id="loginPassword"
+                type="password"
+                autocomplete="current-password"
+                placeholder="Mot de passe"
+            >
+
+            <button
+                class="primary auth-button"
+                onclick="login()"
+            >
+                Se connecter
+            </button>
+
+            <div class="switch">
+                Pas encore de compte ?
+                <a onclick="showRegister()">Créer un compte</a>
+            </div>
+
+        </div>
+
+
+        <!-- INSCRIPTION -->
+
+        <div id="registerForm" style="display:none">
+
+            <div id="registerError" class="error"></div>
+
+            <input
+                id="registerName"
+                type="text"
+                autocomplete="name"
+                placeholder="Nom"
+            >
+
+            <input
+                id="registerEmail"
+                type="email"
+                autocomplete="username"
+                placeholder="Adresse e-mail"
+            >
+
+            <input
+                id="registerPassword"
+                type="password"
+                autocomplete="new-password"
+                placeholder="Mot de passe"
+            >
+
+            <button
+                class="primary auth-button"
+                onclick="register()"
+            >
+                Créer mon compte
+            </button>
+
+            <div class="switch">
+                Déjà inscrit ?
+                <a onclick="showLogin()">Se connecter</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==================================================
+     APPLICATION
+================================================== -->
+
+<section id="app">
+
+<header>
+
+    <div class="header-logo">
+        ☁️ <span>MyCloud</span>
+    </div>
+
+    <div class="search">
+
+        <input
+            id="search"
+            type="search"
+            placeholder="Rechercher dans MyCloud..."
+            oninput="renderFiles()"
+        >
+
+    </div>
+
+    <div class="user">
+
+        <div class="avatar" id="avatar">
+            U
+        </div>
+
+        <span
+            class="user-name"
+            id="username"
+        >
+            Utilisateur
+        </span>
+
+        <button
+            class="logout"
+            onclick="logout()"
+        >
+            Déconnexion
+        </button>
+
+    </div>
+
+</header>
+
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <button
+            class="new-button"
+            onclick="openModal()"
+        >
+            ＋ Nouveau
+        </button>
+
+        <button
+            id="sideAll"
+            class="side-button active"
+            onclick="showAll()"
+        >
+            🏠 Accueil
+        </button>
+
+        <button
+            id="sideFolders"
+            class="side-button"
+            onclick="showFolders()"
+        >
+            📁 Dossiers
+        </button>
+
+        <button
+            id="sideFiles"
+            class="side-button"
+            onclick="showFiles()"
+        >
+            📄 Fichiers
+        </button>
+
+        <button
+            id="sideTrash"
+            class="side-button"
+            onclick="showTrash()"
+        >
+            🗑️ Corbeille
+        </button>
+
+    </aside>
+
+
+    <!-- CONTENU -->
+
+    <main class="content">
+
+        <div class="welcome">
+
+            <h1 id="pageTitle">
+                Mon Drive
+            </h1>
+
+            <p>
+                Bienvenue,
+                <strong id="welcomeName"></strong>
+                👋
+            </p>
+
+        </div>
+
+
+        <!-- STOCKAGE -->
+
+        <div class="storage-box">
+
+            <div class="storage-title">
+
+                <span>
+                    💾 Stockage local du navigateur
+                </span>
+
+                <span id="storageText">
+                    0 élément
+                </span>
+
+            </div>
+
+            <div class="storage-bar">
+                <div
+                    id="storageProgress"
+                    class="storage-progress"
+                ></div>
+            </div>
+
+        </div>
+
+
+        <!-- OUTILS -->
+
+        <div class="toolbar">
+
+            <button onclick="openModal()">
+                📁 Nouveau dossier
+            </button>
+
+            <button onclick="uploadFile()">
+                ⬆️ Importer un fichier
+            </button>
+
+            <button
+                id="emptyTrashButton"
+                onclick="emptyTrash()"
+                style="display:none"
+            >
+                🗑️ Vider la corbeille
+            </button>
+
+        </div>
+
+
+        <!-- FICHIERS -->
+
+        <div
+            id="files"
+            class="files"
+        ></div>
+
+    </main>
+
+</div>
+
+</section>
+
+
+<!-- ==================================================
+     MODAL
+================================================== -->
+
+<div
+    id="modal"
+    class="modal"
+>
+
+    <div class="modal-box">
+
+        <h2>
+            📁 Nouveau dossier
+        </h2>
+
+        <input
+            id="folderName"
+            type="text"
+            placeholder="Nom du dossier"
+        >
+
+        <div class="modal-actions">
+
+            <button
+                class="cancel"
+                onclick="closeModal()"
+            >
+                Annuler
+            </button>
+
+            <button
+                class="primary"
+                onclick="createFolder()"
+            >
+                Créer
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- INPUT FICHIER -->
+
+<input
+    id="fileInput"
+    type="file"
+    style="display:none"
+    onchange="handleFile(event)"
+>
+
+
+<!-- TOAST -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<script>
+
+/* ==================================================
+   CONFIGURATION
+================================================== */
+
+const STORAGE_KEY = "mycloud_users_v3";
+const CURRENT_USER_KEY = "mycloud_current_user_v3";
 
 let currentUser = null;
 let currentFilter = "all";
 
 
-/* =========================
-   UTILISATEURS
-========================= */
+/* ==================================================
+   DONNÉES
+================================================== */
 
 function getUsers() {
-    return JSON.parse(
-        localStorage.getItem("mycloud_users") || "{}"
-    );
+
+    try {
+
+        return JSON.parse(
+            localStorage.getItem(STORAGE_KEY) || "{}"
+        );
+
+    } catch {
+
+        return {};
+
+    }
 }
 
 
 function saveUsers(users) {
+
     localStorage.setItem(
-        "mycloud_users",
+        STORAGE_KEY,
         JSON.stringify(users)
     );
 }
 
 
-/* =========================
+/* ==================================================
+   MESSAGE
+================================================== */
+
+function toast(message) {
+
+    const element =
+        document.getElementById("toast");
+
+    element.textContent = message;
+
+    element.classList.add("show");
+
+    clearTimeout(window.toastTimer);
+
+    window.toastTimer =
+        setTimeout(() => {
+
+            element.classList.remove("show");
+
+        }, 2500);
+}
+
+
+/* ==================================================
    INSCRIPTION
-========================= */
+================================================== */
 
 function register() {
 
     const name =
-        document.getElementById("registerName").value.trim();
+        document.getElementById("registerName")
+            .value.trim();
 
     const email =
-        document.getElementById("registerEmail").value.trim().toLowerCase();
+        document.getElementById("registerEmail")
+            .value.trim()
+            .toLowerCase();
 
     const password =
-        document.getElementById("registerPassword").value;
+        document.getElementById("registerPassword")
+            .value;
+
+    const error =
+        document.getElementById("registerError");
+
+    error.textContent = "";
 
     if (!name || !email || !password) {
-        alert("Veuillez remplir tous les champs.");
+
+        error.textContent =
+            "Veuillez remplir tous les champs.";
+
         return;
     }
 
-    if (password.length < 4) {
-        alert("Le mot de passe doit contenir au moins 4 caractères.");
+    if (password.length < 6) {
+
+        error.textContent =
+            "Le mot de passe doit contenir au moins 6 caractères.";
+
+        return;
+    }
+
+    if (!email.includes("@")) {
+
+        error.textContent =
+            "Veuillez entrer une adresse e-mail valide.";
+
         return;
     }
 
     const users = getUsers();
 
     if (users[email]) {
-        alert("Un compte existe déjà avec cet e-mail.");
+
+        error.textContent =
+            "Un compte existe déjà avec cet e-mail.";
+
         return;
     }
 
     users[email] = {
+
         name: name,
+
+        /*
+         * IMPORTANT :
+         * Ceci est encore un prototype local.
+         * Le mot de passe n'est PAS adapté à
+         * un vrai service public.
+         */
+
         password: password,
+
         files: []
+
     };
 
     saveUsers(users);
-
-    alert("Compte créé avec succès !");
 
     document.getElementById("registerName").value = "";
     document.getElementById("registerEmail").value = "";
     document.getElementById("registerPassword").value = "";
 
     showLogin();
+
+    toast("Compte créé avec succès.");
 }
 
 
-/* =========================
+/* ==================================================
    CONNEXION
-========================= */
+================================================== */
 
 function login() {
 
     const email =
-        document.getElementById("loginEmail").value.trim().toLowerCase();
+        document.getElementById("loginEmail")
+            .value.trim()
+            .toLowerCase();
 
     const password =
-        document.getElementById("loginPassword").value;
+        document.getElementById("loginPassword")
+            .value;
 
-    if (!email || !password) {
-        alert("Veuillez remplir tous les champs.");
-        return;
-    }
+    const error =
+        document.getElementById("loginError");
+
+    error.textContent = "";
 
     const users = getUsers();
 
     if (!users[email]) {
-        alert("Compte introuvable.");
+
+        error.textContent =
+            "Compte introuvable.";
+
         return;
     }
 
     if (users[email].password !== password) {
-        alert("Mot de passe incorrect.");
+
+        error.textContent =
+            "Mot de passe incorrect.";
+
         return;
     }
 
     currentUser = email;
 
     localStorage.setItem(
-        "mycloud_current_user",
+        CURRENT_USER_KEY,
         email
     );
 
@@ -117,128 +1049,161 @@ function login() {
 }
 
 
-/* =========================
-   AFFICHAGE CONNEXION
-========================= */
+/* ==================================================
+   FORMULAIRES
+================================================== */
 
 function showLogin() {
 
-    document.getElementById("loginForm").style.display = "block";
+    document.getElementById("loginForm")
+        .style.display = "block";
 
-    document.getElementById("registerForm").style.display = "none";
+    document.getElementById("registerForm")
+        .style.display = "none";
+
+    document.getElementById("loginError")
+        .textContent = "";
+
 }
 
 
 function showRegister() {
 
-    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("loginForm")
+        .style.display = "none";
 
-    document.getElementById("registerForm").style.display = "block";
+    document.getElementById("registerForm")
+        .style.display = "block";
+
+    document.getElementById("registerError")
+        .textContent = "";
+
 }
 
 
-/* =========================
-   AFFICHAGE APPLICATION
-========================= */
+/* ==================================================
+   APPLICATION
+================================================== */
 
 function showApp() {
 
     const users = getUsers();
 
-    const user = users[currentUser];
+    const user =
+        users[currentUser];
 
     if (!user) {
+
         logout();
+
         return;
     }
 
-    document.getElementById("auth").style.display = "none";
+    document.getElementById("auth")
+        .style.display = "none";
 
-    document.getElementById("app").style.display = "block";
+    document.getElementById("app")
+        .style.display = "block";
 
-    document.getElementById("username").textContent =
-        user.name;
+    document.getElementById("username")
+        .textContent = user.name;
 
-    document.getElementById("welcomeName").textContent =
-        user.name;
+    document.getElementById("welcomeName")
+        .textContent = user.name;
 
-    document.getElementById("avatar").textContent =
+    document.getElementById("avatar")
+        .textContent =
         user.name.charAt(0).toUpperCase();
 
     currentFilter = "all";
 
+    updateNavigation();
+
     renderFiles();
+
+    updateStorage();
 }
 
 
-/* =========================
+/* ==================================================
    DÉCONNEXION
-========================= */
+================================================== */
 
 function logout() {
 
     currentUser = null;
 
     localStorage.removeItem(
-        "mycloud_current_user"
+        CURRENT_USER_KEY
     );
 
-    document.getElementById("app").style.display = "none";
+    document.getElementById("app")
+        .style.display = "none";
 
-    document.getElementById("auth").style.display = "flex";
+    document.getElementById("auth")
+        .style.display = "flex";
 
-    document.getElementById("loginEmail").value = "";
-    document.getElementById("loginPassword").value = "";
+    document.getElementById("loginEmail")
+        .value = "";
+
+    document.getElementById("loginPassword")
+        .value = "";
 
     showLogin();
 }
 
 
-/* =========================
-   MODAL DOSSIER
-========================= */
+/* ==================================================
+   MODAL
+================================================== */
 
 function openModal() {
 
-    document.getElementById("modal").style.display = "flex";
+    document.getElementById("modal")
+        .style.display = "flex";
 
     setTimeout(() => {
-        document.getElementById("folderName").focus();
+
+        document.getElementById("folderName")
+            .focus();
+
     }, 100);
 }
 
 
 function closeModal() {
 
-    document.getElementById("modal").style.display = "none";
+    document.getElementById("modal")
+        .style.display = "none";
 
-    document.getElementById("folderName").value = "";
+    document.getElementById("folderName")
+        .value = "";
 }
 
 
-/* =========================
-   CRÉER UN DOSSIER
-========================= */
+/* ==================================================
+   DOSSIER
+================================================== */
 
 function createFolder() {
 
     const name =
-        document.getElementById("folderName").value.trim();
+        document.getElementById("folderName")
+            .value.trim();
 
     if (!name) {
-        alert("Donnez un nom au dossier.");
-        return;
-    }
 
-    if (!currentUser) {
-        alert("Vous devez être connecté.");
+        toast("Donnez un nom au dossier.");
+
         return;
     }
 
     const users = getUsers();
 
     if (!users[currentUser]) {
-        alert("Utilisateur introuvable.");
+
+        logout();
+
         return;
     }
 
@@ -250,7 +1215,8 @@ function createFolder() {
 
         type: "folder",
 
-        date: new Date().toLocaleDateString("fr-FR"),
+        date: new Date()
+            .toLocaleDateString("fr-FR"),
 
         deleted: false
 
@@ -262,48 +1228,57 @@ function createFolder() {
 
     currentFilter = "all";
 
+    updateNavigation();
+
     renderFiles();
+
+    updateStorage();
+
+    toast("Dossier créé.");
 }
 
 
-/* =========================
-   IMPORTER UN FICHIER
-========================= */
+/* ==================================================
+   FICHIER
+================================================== */
 
 function uploadFile() {
 
     if (!currentUser) {
-        alert("Vous devez être connecté.");
+
+        toast("Connectez-vous d'abord.");
+
         return;
     }
 
-    document.getElementById("fileInput").click();
+    document.getElementById("fileInput")
+        .click();
 }
 
 
-/* =========================
-   TRAITEMENT FICHIER
-========================= */
-
 function handleFile(event) {
 
-    const file = event.target.files[0];
+    const file =
+        event.target.files[0];
 
-    if (!file) {
-        return;
-    }
-
-    if (!currentUser) {
-        alert("Vous devez être connecté.");
-        return;
-    }
+    if (!file) return;
 
     const users = getUsers();
 
     if (!users[currentUser]) {
-        alert("Utilisateur introuvable.");
+
+        logout();
+
         return;
     }
+
+    /*
+     * Pour l'instant, nous enregistrons
+     * les métadonnées du fichier.
+     *
+     * Le fichier réel n'est PAS encore
+     * envoyé sur GitHub.
+     */
 
     users[currentUser].files.push({
 
@@ -315,7 +1290,8 @@ function handleFile(event) {
 
         size: formatSize(file.size),
 
-        date: new Date().toLocaleDateString("fr-FR"),
+        date: new Date()
+            .toLocaleDateString("fr-FR"),
 
         deleted: false
 
@@ -327,91 +1303,161 @@ function handleFile(event) {
 
     currentFilter = "all";
 
+    updateNavigation();
+
     renderFiles();
 
-    alert(
-        "Le fichier a été ajouté à votre espace."
+    updateStorage();
+
+    toast(
+        "Fichier ajouté au prototype."
     );
 }
 
 
-/* =========================
-   TAILLE FICHIER
-========================= */
+/* ==================================================
+   TAILLE
+================================================== */
 
 function formatSize(bytes) {
 
     if (bytes < 1024) {
+
         return bytes + " octets";
     }
 
     if (bytes < 1024 * 1024) {
-        return (bytes / 1024).toFixed(1) + " Ko";
+
+        return (
+            bytes / 1024
+        ).toFixed(1) + " Ko";
     }
 
     if (bytes < 1024 * 1024 * 1024) {
-        return (bytes / (1024 * 1024)).toFixed(1) + " Mo";
+
+        return (
+            bytes / (1024 * 1024)
+        ).toFixed(1) + " Mo";
     }
 
-    return (bytes / (1024 * 1024 * 1024)).toFixed(1) + " Go";
+    return (
+        bytes / (1024 * 1024 * 1024)
+    ).toFixed(1) + " Go";
 }
 
 
-/* =========================
-   AFFICHER LES FICHIERS
-========================= */
+/* ==================================================
+   ICÔNES
+================================================== */
+
+function getFileIcon(name) {
+
+    const extension =
+        name.split(".")
+            .pop()
+            .toLowerCase();
+
+    if (
+        ["jpg","jpeg","png","gif","webp","svg"]
+            .includes(extension)
+    ) return "🖼️";
+
+    if (extension === "pdf")
+        return "📕";
+
+    if (
+        ["doc","docx","odt"]
+            .includes(extension)
+    ) return "📘";
+
+    if (
+        ["xls","xlsx","csv","ods"]
+            .includes(extension)
+    ) return "📊";
+
+    if (
+        ["ppt","pptx","odp"]
+            .includes(extension)
+    ) return "📙";
+
+    if (
+        ["zip","rar","7z"]
+            .includes(extension)
+    ) return "🗜️";
+
+    if (
+        ["mp4","mov","avi","mkv","webm"]
+            .includes(extension)
+    ) return "🎬";
+
+    if (
+        ["mp3","wav","ogg"]
+            .includes(extension)
+    ) return "🎵";
+
+    if (
+        ["txt","md"]
+            .includes(extension)
+    ) return "📝";
+
+    return "📄";
+}
+
+
+/* ==================================================
+   AFFICHAGE
+================================================== */
 
 function renderFiles() {
 
-    if (!currentUser) {
-        return;
-    }
+    if (!currentUser) return;
 
     const users = getUsers();
 
-    if (!users[currentUser]) {
-        return;
-    }
+    const user =
+        users[currentUser];
+
+    if (!user) return;
 
     const files =
-        users[currentUser].files || [];
+        user.files || [];
 
-    const searchInput =
+    const searchElement =
         document.getElementById("search");
 
     const search =
-        searchInput
-            ? searchInput.value.toLowerCase().trim()
+        searchElement
+            ? searchElement.value
+                .toLowerCase()
+                .trim()
             : "";
 
     const container =
         document.getElementById("files");
 
-    if (!container) {
-        return;
-    }
-
     container.innerHTML = "";
 
-    let filtered = files.filter(item => {
+    let filtered =
+        files.filter(item => {
 
-        const isDeleted =
-            item.deleted === true;
+            const deleted =
+                item.deleted === true;
 
-        /* CORBEILLE */
-        if (currentFilter === "trash") {
+            if (currentFilter === "trash") {
 
-            return isDeleted &&
-                item.name.toLowerCase().includes(search);
-        }
+                return deleted &&
+                    item.name
+                        .toLowerCase()
+                        .includes(search);
+            }
 
-        /* ÉLÉMENTS NORMAUX */
-        return !isDeleted &&
-            item.name.toLowerCase().includes(search);
-    });
+            return !deleted &&
+                item.name
+                    .toLowerCase()
+                    .includes(search);
 
+        });
 
-    /* FILTRE DOSSIERS */
 
     if (currentFilter === "folders") {
 
@@ -422,8 +1468,6 @@ function renderFiles() {
     }
 
 
-    /* FILTRE FICHIERS */
-
     if (currentFilter === "files") {
 
         filtered =
@@ -433,56 +1477,54 @@ function renderFiles() {
     }
 
 
-    /* AUCUN ÉLÉMENT */
-
     if (filtered.length === 0) {
-
-        let message = "Aucun élément ici.";
 
         let icon = "☁️";
 
-        if (currentFilter === "trash") {
-            icon = "🗑️";
-            message = "La corbeille est vide.";
-        }
+        let message = "Aucun élément ici.";
 
         if (currentFilter === "folders") {
+
             icon = "📁";
             message = "Aucun dossier.";
+
         }
 
         if (currentFilter === "files") {
+
             icon = "📄";
             message = "Aucun fichier.";
+
+        }
+
+        if (currentFilter === "trash") {
+
+            icon = "🗑️";
+            message = "La corbeille est vide.";
+
         }
 
         container.innerHTML = `
 
-            <div style="
-                grid-column:1/-1;
-                text-align:center;
-                padding:60px;
-                color:#777;
-            ">
+            <div class="empty">
 
-                <div style="
-                    font-size:50px;
-                    margin-bottom:15px;
-                ">
+                <div class="empty-icon">
                     ${icon}
                 </div>
 
-                <p>${message}</p>
+                <p>
+                    ${message}
+                </p>
 
             </div>
 
         `;
 
+        updateStorage();
+
         return;
     }
 
-
-    /* AFFICHAGE */
 
     filtered.forEach(item => {
 
@@ -497,8 +1539,6 @@ function renderFiles() {
                 : getFileIcon(item.name);
 
 
-        /* CORBEILLE */
-
         if (currentFilter === "trash") {
 
             div.innerHTML = `
@@ -512,9 +1552,11 @@ function renderFiles() {
                 </div>
 
                 <div class="file-info">
-                    ${item.type === "folder"
-                        ? "Dossier"
-                        : item.size || "Fichier"}
+                    ${
+                        item.type === "folder"
+                            ? "Dossier"
+                            : item.size || "Fichier"
+                    }
                     · Supprimé le ${item.date}
                 </div>
 
@@ -538,11 +1580,7 @@ function renderFiles() {
 
             `;
 
-        }
-
-        /* FICHIERS NORMAUX */
-
-        else {
+        } else {
 
             div.innerHTML = `
 
@@ -555,13 +1593,12 @@ function renderFiles() {
                 </div>
 
                 <div class="file-info">
-
-                    ${item.type === "folder"
-                        ? "Dossier"
-                        : item.size || "Fichier"}
-
+                    ${
+                        item.type === "folder"
+                            ? "Dossier"
+                            : item.size || "Fichier"
+                    }
                     · ${item.date}
-
                 </div>
 
                 <div class="file-actions">
@@ -578,104 +1615,17 @@ function renderFiles() {
             `;
         }
 
-
         container.appendChild(div);
 
     });
+
+    updateStorage();
 }
 
 
-/* =========================
-   ICÔNES DES FICHIERS
-========================= */
-
-function getFileIcon(name) {
-
-    const extension =
-        name.split(".").pop().toLowerCase();
-
-
-    if (
-        ["jpg", "jpeg", "png", "gif", "webp", "svg"]
-            .includes(extension)
-    ) {
-        return "🖼️";
-    }
-
-
-    if (
-        ["pdf"]
-            .includes(extension)
-    ) {
-        return "📕";
-    }
-
-
-    if (
-        ["doc", "docx", "odt"]
-            .includes(extension)
-    ) {
-        return "📘";
-    }
-
-
-    if (
-        ["xls", "xlsx", "csv", "ods"]
-            .includes(extension)
-    ) {
-        return "📊";
-    }
-
-
-    if (
-        ["ppt", "pptx", "odp"]
-            .includes(extension)
-    ) {
-        return "📙";
-    }
-
-
-    if (
-        ["zip", "rar", "7z"]
-            .includes(extension)
-    ) {
-        return "🗜️";
-    }
-
-
-    if (
-        ["mp4", "mov", "avi", "mkv", "webm"]
-            .includes(extension)
-    ) {
-        return "🎬";
-    }
-
-
-    if (
-        ["mp3", "wav", "ogg"]
-            .includes(extension)
-    ) {
-        return "🎵";
-    }
-
-
-    if (
-        ["txt", "md"]
-            .includes(extension)
-    ) {
-        return "📝";
-    }
-
-
-    return "📄";
-}
-
-
-/* =========================
+/* ==================================================
    CORBEILLE
-========================= */
-
-/* Déplacer vers la corbeille */
+================================================== */
 
 function deleteItem(id) {
 
@@ -692,28 +1642,26 @@ function deleteItem(id) {
     const user =
         users[currentUser];
 
-    if (!user) {
-        return;
-    }
+    if (!user) return;
 
     const item =
         user.files.find(
-            item => item.id === id
+            element => element.id === id
         );
 
-    if (!item) {
-        return;
-    }
+    if (!item) return;
 
     item.deleted = true;
 
     saveUsers(users);
 
     renderFiles();
+
+    updateStorage();
+
+    toast("Élément déplacé vers la corbeille.");
 }
 
-
-/* Restaurer */
 
 function restoreItem(id) {
 
@@ -722,28 +1670,24 @@ function restoreItem(id) {
     const user =
         users[currentUser];
 
-    if (!user) {
-        return;
-    }
+    if (!user) return;
 
     const item =
         user.files.find(
-            item => item.id === id
+            element => element.id === id
         );
 
-    if (!item) {
-        return;
-    }
+    if (!item) return;
 
     item.deleted = false;
 
     saveUsers(users);
 
     renderFiles();
+
+    toast("Élément restauré.");
 }
 
-
-/* Suppression définitive */
 
 function permanentlyDelete(id) {
 
@@ -760,55 +1704,47 @@ function permanentlyDelete(id) {
     const user =
         users[currentUser];
 
-    if (!user) {
-        return;
-    }
+    if (!user) return;
 
     user.files =
         user.files.filter(
-            item => item.id !== id
+            element => element.id !== id
         );
 
     saveUsers(users);
 
     renderFiles();
+
+    updateStorage();
+
+    toast("Élément supprimé définitivement.");
 }
 
 
-/* =========================
-   VIDER LA CORBEILLE
-========================= */
-
 function emptyTrash() {
-
-    if (!currentUser) {
-        return;
-    }
 
     const users = getUsers();
 
     const user =
         users[currentUser];
 
-    if (!user) {
-        return;
-    }
+    if (!user) return;
 
-    const trash =
+    const count =
         user.files.filter(
             item => item.deleted === true
-        );
+        ).length;
 
-    if (trash.length === 0) {
+    if (count === 0) {
 
-        alert("La corbeille est déjà vide.");
+        toast("La corbeille est déjà vide.");
 
         return;
     }
 
     if (
         !confirm(
-            "Voulez-vous supprimer définitivement tous les éléments de la corbeille ?\n\nCette action est irréversible."
+            "Supprimer définitivement tous les éléments de la corbeille ?"
         )
     ) {
         return;
@@ -822,16 +1758,22 @@ function emptyTrash() {
     saveUsers(users);
 
     renderFiles();
+
+    updateStorage();
+
+    toast("Corbeille vidée.");
 }
 
 
-/* =========================
-   FILTRES
-========================= */
+/* ==================================================
+   NAVIGATION
+================================================== */
 
 function showAll() {
 
     currentFilter = "all";
+
+    updateNavigation();
 
     renderFiles();
 }
@@ -841,6 +1783,8 @@ function showFolders() {
 
     currentFilter = "folders";
 
+    updateNavigation();
+
     renderFiles();
 }
 
@@ -848,6 +1792,8 @@ function showFolders() {
 function showFiles() {
 
     currentFilter = "files";
+
+    updateNavigation();
 
     renderFiles();
 }
@@ -857,13 +1803,145 @@ function showTrash() {
 
     currentFilter = "trash";
 
+    updateNavigation();
+
     renderFiles();
 }
 
 
-/* =========================
+function updateNavigation() {
+
+    const buttons = [
+        "sideAll",
+        "sideFolders",
+        "sideFiles",
+        "sideTrash"
+    ];
+
+    buttons.forEach(id => {
+
+        const button =
+            document.getElementById(id);
+
+        if (button) {
+
+            button.classList.remove("active");
+
+        }
+
+    });
+
+
+    const map = {
+
+        all: "sideAll",
+
+        folders: "sideFolders",
+
+        files: "sideFiles",
+
+        trash: "sideTrash"
+
+    };
+
+    const active =
+        document.getElementById(
+            map[currentFilter]
+        );
+
+    if (active) {
+
+        active.classList.add("active");
+
+    }
+
+
+    const title =
+        document.getElementById("pageTitle");
+
+    if (currentFilter === "all")
+        title.textContent = "Mon Drive";
+
+    if (currentFilter === "folders")
+        title.textContent = "Mes dossiers";
+
+    if (currentFilter === "files")
+        title.textContent = "Mes fichiers";
+
+    if (currentFilter === "trash")
+        title.textContent = "Corbeille";
+
+
+    const emptyButton =
+        document.getElementById(
+            "emptyTrashButton"
+        );
+
+    if (emptyButton) {
+
+        emptyButton.style.display =
+            currentFilter === "trash"
+                ? "block"
+                : "none";
+
+    }
+}
+
+
+/* ==================================================
+   STOCKAGE
+================================================== */
+
+function updateStorage() {
+
+    if (!currentUser) return;
+
+    const users = getUsers();
+
+    const user =
+        users[currentUser];
+
+    if (!user) return;
+
+    const files =
+        user.files || [];
+
+    const activeFiles =
+        files.filter(
+            item => !item.deleted
+        );
+
+    const count =
+        activeFiles.length;
+
+    document.getElementById(
+        "storageText"
+    ).textContent =
+        count +
+        (count > 1 ? " éléments" : " élément");
+
+
+    /*
+     * Ceci représente uniquement le nombre
+     * d'éléments du prototype.
+     *
+     * Ce n'est PAS encore un véritable
+     * quota cloud.
+     */
+
+    const progress =
+        Math.min(count * 5, 100);
+
+    document.getElementById(
+        "storageProgress"
+    ).style.width =
+        progress + "%";
+}
+
+
+/* ==================================================
    SÉCURITÉ HTML
-========================= */
+================================================== */
 
 function escapeHTML(text) {
 
@@ -876,20 +1954,26 @@ function escapeHTML(text) {
 }
 
 
-/* =========================
-   TOUCHE ENTRÉE
-========================= */
+/* ==================================================
+   CLAVIER
+================================================== */
 
 document.addEventListener(
     "keydown",
     function(event) {
 
-        /* Connexion */
+        if (event.key === "Escape") {
+
+            closeModal();
+
+        }
+
 
         if (
             event.key === "Enter" &&
-            document.getElementById("loginForm") &&
-            document.getElementById("loginForm").style.display !== "none"
+            document
+                .getElementById("loginForm")
+                .style.display !== "none"
         ) {
 
             const active =
@@ -902,43 +1986,32 @@ document.addEventListener(
                     active.id === "loginPassword"
                 )
             ) {
+
                 login();
+
             }
+
         }
 
-
-        /* Création dossier */
 
         if (
             event.key === "Enter" &&
-            document.getElementById("modal") &&
-            document.getElementById("modal").style.display === "flex"
+            document
+                .getElementById("modal")
+                .style.display === "flex"
         ) {
 
             createFolder();
-        }
 
-
-        /* Échapper = fermer modal */
-
-        if (event.key === "Escape") {
-
-            const modal =
-                document.getElementById("modal");
-
-            if (modal) {
-                modal.style.display = "none";
-            }
         }
 
     }
 );
 
 
-/* =========================
-   FERMER MODAL EN CLIQUANT
-   À L'EXTÉRIEUR
-========================= */
+/* ==================================================
+   MODAL EXTÉRIEUR
+================================================== */
 
 document.addEventListener(
     "click",
@@ -951,22 +2024,24 @@ document.addEventListener(
             modal &&
             event.target === modal
         ) {
+
             closeModal();
+
         }
 
     }
 );
 
 
-/* =========================
-   RECHARGEMENT
-========================= */
+/* ==================================================
+   DÉMARRAGE
+================================================== */
 
 window.onload = function() {
 
     const savedUser =
         localStorage.getItem(
-            "mycloud_current_user"
+            CURRENT_USER_KEY
         );
 
     if (savedUser) {
@@ -980,8 +2055,15 @@ window.onload = function() {
             showApp();
 
             return;
+
         }
+
     }
 
     showLogin();
 };
+
+</script>
+
+</body>
+</html>
