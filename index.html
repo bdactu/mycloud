@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyCloud</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f6f8fb;
+    color: #202124;
+}
+
+/* =========================
+   AUTHENTIFICATION
+========================= */
+
+#auth {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #eef3ff, #ffffff);
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.1);
+}
+
+.logo {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.logo span {
+    color: #4285f4;
+}
+
+.subtitle {
+    text-align: center;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+.auth-box input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 14px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-size: 14px;
+}
+
+.primary {
+    width: 100%;
+    background: #4285f4;
+    color: white;
+    font-weight: bold;
+}
+
+.primary:hover {
+    background: #3367d6;
+}
+
+.switch {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
+
+.switch a {
+    color: #4285f4;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* =========================
+   APPLICATION
+========================= */
+
+#app {
+    display: none;
+    min-height: 100vh;
+}
+
+header {
+    height: 70px;
+    background: white;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    align-items: center;
+    padding: 0 25px;
+    gap: 25px;
+}
+
+.header-logo {
+    font-size: 23px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.header-logo span {
+    color: #4285f4;
+}
+
+.search {
+    flex: 1;
+    max-width: 600px;
+    position: relative;
+}
+
+.search input {
+    width: 100%;
+    padding: 13px 18px;
+    border: none;
+    background: #f1f3f4;
+    border-radius: 30px;
+    outline: none;
+}
+
+.user {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #4285f4;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.logout {
+    background: #f1f3f4;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.layout {
+    display: flex;
+    min-height: calc(100vh - 70px);
+}
+
+.sidebar {
+    width: 230px;
+    background: white;
+    border-right: 1px solid #e5e5e5;
+    padding: 25px 15px;
+}
+
+.new-btn {
+    width: 100%;
+    background: #4285f4;
+    color: white;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+
+.sidebar button:not(.new-btn) {
+    width: 100%;
+    background: transparent;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+.sidebar button:not(.new-btn):hover {
+    background: #f1f3f4;
+}
+
+.content {
+    flex: 1;
+    padding: 30px;
+    overflow-x: auto;
+}
+
+.welcome {
+    margin-bottom: 25px;
+}
+
+.welcome h1 {
+    margin-bottom: 7px;
+}
+
+/* =========================
+   FILES
+========================= */
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.toolbar button {
+    background: white;
+    border: 1px solid #ddd;
+}
+
+.toolbar button:hover {
+    background: #f1f3f4;
+}
+
+.files {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 18px;
+}
+
+.file {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 15px;
+    padding: 20px;
+    min-height: 150px;
+    transition: .2s;
+}
+
+.file:hover {
+    box-shadow: 0 5px 20px rgba(0,0,0,.08);
+    transform: translateY(-2px);
+}
+
+.file-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+.file-name {
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.file-info {
+    color: #777;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+.file-actions {
+    display: flex;
+    gap: 7px;
+    margin-top: 15px;
+}
+
+.file-actions button {
+    padding: 7px 10px;
+    background: #f1f3f4;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-box {
+    background: white;
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    border-radius: 18px;
+}
+
+.modal-box h2 {
+    margin-bottom: 20px;
+}
+
+.modal-box input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.modal-actions button {
+    flex: 1;
+}
+
+.cancel {
+    background: #eee;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:700px) {
+
+    header {
+        padding: 0 15px;
+        gap: 10px;
+    }
+
+    .header-logo {
+        display: none;
+    }
+
+    .sidebar {
+        width: 65px;
+        padding: 15px 8px;
+    }
+
+    .sidebar button {
+        font-size: 0;
+        text-align: center !important;
+    }
+
+    .sidebar button::first-letter {
+        font-size: 20px;
+    }
+
+    .content {
+        padding: 20px;
+    }
+
+    .user span {
+        display: none;
+    }
+
+    .files {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     AUTHENTIFICATION
+========================= -->
+
+<section id="auth">
+
+    <div class="auth-box">
+
+        <div class="logo">
+            ☁️ <span>MyCloud</span>
+        </div>
+
+        <p class="subtitle">
+            Votre espace de stockage personnel
+        </p>
+
+        <!-- CONNEXION -->
+
+        <div id="loginForm">
+
+            <input
+                id="loginEmail"
+                type="email"
+                placeholder="Adresse e-mail"
+            >
+
+            <input
+                id="loginPassword"
+                type="password"
+                placeholder="Mot de passe"
+            >
+
+            <button class="primary" onclick="login()">
+                Se connecter
+            </button>
+
+            <div class="switch">
+                Pas encore de compte ?
+                <a onclick="showRegister()">Créer un compte</a>
+            </div>
+
+        </div>
+
+        <!-- INSCRIPTION -->
+
+        <div id="registerForm" style="display:none">
+
+            <input
+                id="registerName"
+                type="text"
+                placeholder="Nom"
+            >
+
+            <input
+                id="registerEmail"
+                type="email"
+                placeholder="Adresse e-mail"
+            >
+
+            <input
+                id="registerPassword"
+                type="password"
+                placeholder="Mot de passe"
+            >
+
+            <button class="primary" onclick="register()">
+                Créer mon compte
+            </button>
+
+            <div class="switch">
+                Déjà inscrit ?
+                <a onclick="showLogin()">Se connecter</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     APPLICATION
+========================= -->
+
+<section id="app">
+
+<header>
+
+    <div class="header-logo">
+        ☁️ <span>MyCloud</span>
+    </div>
+
+    <div class="search">
+        <input
+            id="search"
+            placeholder="Rechercher dans votre Drive..."
+            oninput="renderFiles()"
+        >
+    </div>
+
+    <div class="user">
+
+        <div class="avatar" id="avatar">
+            U
+        </div>
+
+        <span id="username">
+            Utilisateur
+        </span>
+
+        <button class="logout" onclick="logout()">
+            Déconnexion
+        </button>
+
+    </div>
+
+</header>
+
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <button class="new-btn" onclick="openModal()">
+            ＋ Nouveau
+        </button>
+
+        <button onclick="showAll()">
+            🏠 Accueil
+        </button>
+
+        <button onclick="showFolders()">
+            📁 Dossiers
+        </button>
+
+        <button onclick="showFiles()">
+            📄 Fichiers
+        </button>
+
+        <button onclick="showTrash()">
+            🗑️ Corbeille
+        </button>
+
+    </aside>
+
+
+    <!-- CONTENU -->
+
+    <main class="content">
+
+        <div class="welcome">
+
+            <h1>
+                Mon Drive
+            </h1>
+
+            <p>
+                Bienvenue, <span id="welcomeName"></span> 👋
+            </p>
+
+        </div>
+
+
+        <div class="toolbar">
+
+            <button onclick="openModal()">
+                📁 Nouveau dossier
+            </button>
+
+            <button onclick="uploadFile()">
+                ⬆️ Importer un fichier
+            </button>
+
+        </div>
+
+
+        <div id="files" class="files"></div>
+
+    </main>
+
+</div>
+
+</section>
+
+
+<!-- =========================
+     MODAL
+========================= -->
+
+<div id="modal" class="modal">
+
+    <div class="modal-box">
+
+        <h2>
+            Nouveau dossier
+        </h2>
+
+        <input
+            id="folderName"
+            placeholder="Nom du dossier"
+        >
+
+        <div class="modal-actions">
+
+            <button
+                class="cancel"
+                onclick="closeModal()"
+            >
+                Annuler
+            </button>
+
+            <button
+                class="primary"
+                onclick="createFolder()"
+            >
+                Créer
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<input
+    id="fileInput"
+    type="file"
+    style="display:none"
+    onchange="handleFile(event)"
+>
+
+
+<script>
+
+/* =========================
+   DONNÉES
+========================= */
+
+let currentUser = null;
+let currentFilter = "all";
+
+
+function getUsers() {
+
+    return JSON.parse(
+        localStorage.getItem("mycloud_users") || "{}"
+    );
+
+}
+
+
+function saveUsers(users) {
+
+    localStorage.setItem(
+        "mycloud_users",
+        JSON.stringify(users)
+    );
+
+}
+
+
+/* =========================
+   INSCRIPTION
+========================= */
+
+function register() {
+
+    const name =
+        document.getElementById("registerName").value.trim();
+
+    const email =
+        document.getElementById("registerEmail").value.trim();
+
+    const password =
+        document.getElementById("registerPassword").value;
+
+    if (!name || !email || !password) {
+
+        alert("Veuillez remplir tous les champs.");
+
+        return;
+
+    }
+
+    const users = getUsers();
+
+    if (users[email]) {
+
+        alert("Un compte existe déjà avec cet e-mail.");
+
+        return;
+
+    }
+
+    users[email] = {
+
+        name: name,
+
+        password: password,
+
+        files: []
+
+    };
+
+    saveUsers(users);
+
+    alert("Compte créé avec succès !");
+
+    showLogin();
+
+}
+
+
+/* =========================
+   CONNEXION
+========================= */
+
+function login() {
+
+    const email =
+        document.getElementById("loginEmail").value.trim();
+
+    const password =
+        document.getElementById("loginPassword").value;
+
+    const users = getUsers();
+
+    if (!users[email]) {
+
+        alert("Compte introuvable.");
+
+        return;
+
+    }
+
+    if (users[email].password !== password) {
+
+        alert("Mot de passe incorrect.");
+
+        return;
+
+    }
+
+    currentUser = email;
+
+    localStorage.setItem(
+        "mycloud_current_user",
+        email
+    );
+
+    showApp();
+
+}
+
+
+/* =========================
+   INTERFACE
+========================= */
+
+function showLogin() {
+
+    document.getElementById("loginForm").style.display = "block";
+
+    document.getElementById("registerForm").style.display = "none";
+
+}
+
+
+function showRegister() {
+
+    document.getElementById("loginForm").style.display = "none";
+
+    document.getElementById("registerForm").style.display = "block";
+
+}
+
+
+function showApp() {
+
+    const users = getUsers();
+
+    const user = users[currentUser];
+
+    if (!user) return;
+
+    document.getElementById("auth").style.display = "none";
+
+    document.getElementById("app").style.display = "block";
+
+    document.getElementById("username").textContent = user.name;
+
+    document.getElementById("welcomeName").textContent = user.name;
+
+    document.getElementById("avatar").textContent =
+        user.name.charAt(0).toUpperCase();
+
+    renderFiles();
+
+}
+
+
+/* =========================
+   DÉCONNEXION
+========================= */
+
+function logout() {
+
+    currentUser = null;
+
+    localStorage.removeItem(
+        "mycloud_current_user"
+    );
+
+    document.getElementById("app").style.display = "none";
+
+    document.getElementById("auth").style.display = "flex";
+
+}
+
+
+/* =========================
+   DOSSIERS
+========================= */
+
+function openModal() {
+
+    document.getElementById("modal").style.display = "flex";
+
+}
+
+
+function closeModal() {
+
+    document.getElementById("modal").style.display = "none";
+
+}
+
+
+function createFolder() {
+
+    const name =
+        document.getElementById("folderName").value.trim();
+
+    if (!name) {
+
+        alert("Donnez un nom au dossier.");
+
+        return;
+
+    }
+
+    const users = getUsers();
+
+    users[currentUser].files.push({
+
+        id: Date.now(),
+
+        name: name,
+
+        type: "folder",
+
+        date: new Date().toLocaleDateString("fr-FR")
+
+    });
+
+    saveUsers(users);
+
+    document.getElementById("folderName").value = "";
+
+    closeModal();
+
+    renderFiles();
+
+}
+
+
+/* =========================
+   FICHIERS
+========================= */
+
+function uploadFile() {
+
+    document.getElementById("fileInput").click();
+
+}
+
+
+function handleFile(event) {
+
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const users = getUsers();
+
+    users[currentUser].files.push({
+
+        id: Date.now(),
+
+        name: file.name,
+
+        type: "file",
+
+        size: formatSize(file.size),
+
+        date: new Date().toLocaleDateString("fr-FR")
+
+    });
+
+    saveUsers(users);
+
+    renderFiles();
+
+    alert(
+        "Le fichier a été ajouté à votre espace local."
+    );
+
+}
+
+
+function formatSize(bytes) {
+
+    if (bytes < 1024)
+        return bytes + " octets";
+
+    if (bytes < 1024 * 1024)
+        return (bytes / 1024).toFixed(1) + " Ko";
+
+    return (bytes / (1024 * 1024)).toFixed(1) + " Mo";
+
+}
+
+
+/* =========================
+   AFFICHAGE
+========================= */
+
+function renderFiles() {
+
+    if (!currentUser) return;
+
+    const users = getUsers();
+
+    const files = users[currentUser].files || [];
+
+    const search =
+        document.getElementById("search").value.toLowerCase();
+
+    const container =
+        document.getElementById("files");
+
+    container.innerHTML = "";
+
+    let filtered = files.filter(item =>
+        item.name.toLowerCase().includes(search)
+    );
+
+    if (currentFilter === "folders") {
+
+        filtered =
+            filtered.filter(item => item.type === "folder");
+
+    }
+
+    if (currentFilter === "files") {
+
+        filtered =
+            filtered.filter(item => item.type === "file");
+
+    }
+
+    if (filtered.length === 0) {
+
+        container.innerHTML = `
+            <div style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:60px;
+                color:#777;
+            ">
+                <div style="font-size:50px">☁️</div>
+                <p>Aucun élément ici.</p>
+            </div>
+        `;
+
+        return;
+
+    }
+
+    filtered.forEach(item => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "file";
+
+        div.innerHTML = `
+
+            <div class="file-icon">
+
+                ${item.type === "folder"
+                    ? "📁"
+                    : getFileIcon(item.name)}
+
+            </div>
+
+            <div class="file-name">
+                ${escapeHTML(item.name)}
+            </div>
+
+            <div class="file-info">
+
+                ${item.type === "folder"
+                    ? "Dossier"
+                    : item.size || "Fichier"}
+
+                · ${item.date}
+
+            </div>
+
+            <div class="file-actions">
+
+                <button
+                    onclick="deleteItem(${item.id})"
+                >
+                    🗑️
+                </button>
+
+            </div>
+        `;
+
+        container.appendChild(div);
+
+    });
+
+}
+
+
+/* =========================
+   ICÔNES
+========================= */
+
+function getFileIcon(name) {
+
+    const extension =
+        name.split(".").pop().toLowerCase();
+
+    if (["jpg","jpeg","png","gif","webp"].includes(extension))
+        return "🖼️";
+
+    if (["pdf"].includes(extension))
+        return "📕";
+
+    if (["doc","docx"].includes(extension))
+        return "📘";
+
+    if (["xls","xlsx"].includes(extension))
+        return "📊";
+
+    if (["zip","rar"].includes(extension))
+        return "🗜️";
+
+    if (["mp4","mov","avi"].includes(extension))
+        return "🎬";
+
+    return "📄";
+
+}
+
+
+/* =========================
+   SUPPRESSION
+========================= */
+
+function deleteItem(id) {
+
+    if (!confirm("Supprimer cet élément ?"))
+        return;
+
+    const users = getUsers();
+
+    users[currentUser].files =
+        users[currentUser].files.filter(
+            item => item.id !== id
+        );
+
+    saveUsers(users);
+
+    renderFiles();
+
+}
+
+
+/* =========================
+   FILTRES
+========================= */
+
+function showAll() {
+
+    currentFilter = "all";
+
+    renderFiles();
+
+}
+
+
+function showFolders() {
+
+    currentFilter = "folders";
+
+    renderFiles();
+
+}
+
+
+function showFiles() {
+
+    currentFilter = "files";
+
+    renderFiles();
+
+}
+
+
+function showTrash() {
+
+    alert(
+        "La corbeille sera ajoutée dans une prochaine version."
+    );
+
+}
+
+
+/* =========================
+   SÉCURITÉ HTML
+========================= */
+
+function escapeHTML(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+/* =========================
+   RECONNEXION AUTOMATIQUE
+========================= */
+
+window.onload = function() {
+
+    const savedUser =
+        localStorage.getItem("mycloud_current_user");
+
+    if (savedUser) {
+
+        const users = getUsers();
+
+        if (users[savedUser]) {
+
+            currentUser = savedUser;
+
+            showApp();
+
+        }
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
